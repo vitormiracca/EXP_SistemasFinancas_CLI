@@ -58,9 +58,5 @@ class Lancamento:
             return -abs(valor)
         return valor
 
-    @classmethod
-    def listar_lancamentos(cls):
-        return cls._lancamentos
-
     def __str__(self):
         return f"{self.data} - {self.tipo_lancamento} - {self.valor} - {self.conta} - {self.categoria} - {self.descricao}"

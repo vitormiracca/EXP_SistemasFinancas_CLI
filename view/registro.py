@@ -94,7 +94,7 @@ def registrar_lancamento():
         tipos_lancamento = ['Receita', 'Despesa', 'Transferência Entre Contas']
         listar_opcoes(tipos_lancamento)
         try:
-            tipo_lancamento_idx = int(input()) - 1
+            tipo_lancamento_idx = int(input()) -1
             if tipo_lancamento_idx not in range(len(tipos_lancamento)):
                 raise IndexError
             tipo_lancamento = tipos_lancamento[tipo_lancamento_idx]
@@ -106,7 +106,7 @@ def registrar_lancamento():
     while True:
         print("\n# Contas Disponíveis:")
         contas = Conta.listar_contas()
-        listar_opcoes(contas)
+        listar_opcoes([conta['nome_conta'] for conta in contas])
         try:
             conta_idx = int(input()) - 1
             if conta_idx not in range(len(contas)):
@@ -119,10 +119,10 @@ def registrar_lancamento():
     # Perguntar a categoria
     while True:
         print("\n# Categorias Disponíveis:")
-        categorias = Categoria.listar_categorias(tipo_lancamento)
-        listar_opcoes(categorias)
+        categorias = Categoria.listar_categorias(tipo_lancamento=tipo_lancamento)
+        listar_opcoes([categoria['nome_categoria'] for categoria in categorias])
         try:
-            categoria_idx = int(input()) - 1
+            categoria_idx = int(input()) -1
             if categoria_idx not in range(len(categorias)):
                 raise IndexError
             categoria = categorias[categoria_idx]
@@ -161,8 +161,8 @@ def registrar_lancamento():
         lancamento_controller.criar_lancamento(
             data_lancamento=data_lancamento,
             tipo_lancamento=tipo_lancamento,
-            conta=conta,
-            categoria=categoria,
+            conta_id=conta['id'],
+            categoria_id=categoria['id'],
             valor=-abs(valor),
             descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
         )
@@ -171,8 +171,8 @@ def registrar_lancamento():
         lancamento_controller.criar_lancamento(
             data_lancamento=data_lancamento,
             tipo_lancamento=tipo_lancamento,
-            conta=conta_destino,
-            categoria=categoria,
+            conta_id=conta['id'],
+            categoria_id=categoria['id'],
             valor=abs(valor),
             descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
         )
@@ -201,12 +201,12 @@ def registrar_lancamento():
     else:
         lancamento_controller = LancamentoController()
         lancamento_controller.criar_lancamento(
-            data_lancamento, 
-            tipo_lancamento, 
-            conta['id'], 
-            categoria['id'], 
-            valor, 
-            descricao
+            data_lancamento=data_lancamento, 
+            tipo_lancamento=tipo_lancamento, 
+            conta_id=conta['id'], 
+            categoria_id=categoria['id'], 
+            valor= abs(valor) if tipo_lancamento=='Receita' else -abs(valor), 
+            descricao=descricao
             )
         # Lancamento(
         #     data_lancamento=data_lancamento,
