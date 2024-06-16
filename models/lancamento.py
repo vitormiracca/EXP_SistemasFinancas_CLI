@@ -10,7 +10,7 @@ class Lancamento:
         self._tipo_lancamento = tipo_lancamento
         self._conta = conta
         self.categoria = categoria
-        self._valor = valor
+        self._valor = self._ajustar_valor(valor)
         self._descricao = descricao
         self._timestamp_registro = datetime.now()
         Lancamento._lancamentos.append(self)
@@ -50,6 +50,13 @@ class Lancamento:
     @descricao.setter
     def descricao(self, descricao):
         self._descricao = descricao
+
+    def _ajustar_valor(self, valor):
+        if self._tipo_lancamento == 'Receita':
+            return abs(valor)
+        elif self._tipo_lancamento == 'Despesa':
+            return -abs(valor)
+        return valor
 
     @classmethod
     def listar_lancamentos(cls):

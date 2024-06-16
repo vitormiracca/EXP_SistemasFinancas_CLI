@@ -1,3 +1,4 @@
+from controller.conta_dao import ContaController
 
 
 class Conta:
@@ -38,13 +39,18 @@ class Conta:
     def dia_vencimento(self, dia_vencimento):
         self._dia_vencimento = dia_vencimento
 
-    @classmethod  
-    def listar_contas(cls, tipo_conta=None):
-        if (tipo_conta):
-            return cls._contas[tipo_conta]
-        else:
-            lista_unica = [conta for sublista_conta in cls._contas.values() for conta in sublista_conta]
-            return lista_unica
+    # @classmethod  
+    # def listar_contas(cls, tipo_conta=None):
+    #     if (tipo_conta):
+    #         return cls._contas[tipo_conta]
+    #     else:
+    #         lista_unica = [conta for sublista_conta in cls._contas.values() for conta in sublista_conta]
+    #         return lista_unica
+        
+    @staticmethod
+    def listar_contas():
+        conta_controller = ContaController()
+        return conta_controller.listar_contas()
 
     def __str__(self):
         return self._nome_conta

@@ -1,4 +1,7 @@
 
+from controller.categoria_dao import CategoriaController
+
+
 class Categoria:
 
     _categorias = {}
@@ -24,12 +27,17 @@ class Categoria:
     def tipo_lancamento(self, nome: str):
         self._tipo_lancamento = nome
 
-    @classmethod
-    def listar_categorias(cls, tipo_lancamento=None):
-        if tipo_lancamento:
-            return cls._categorias.get(tipo_lancamento, [])
-        else:
-            return cls._categorias
+    # @classmethod
+    # def listar_categorias(cls, tipo_lancamento=None):
+    #     if tipo_lancamento:
+    #         return cls._categorias.get(tipo_lancamento, [])
+    #     else:
+    #         return cls._categorias
+        
+    @staticmethod
+    def listar_categorias(tipo_lancamento=None):
+        categoria_controller = CategoriaController()
+        return categoria_controller.listar_categorias(tipo_lancamento)
 
     def __str__(self):
         return f"{self.nome_categoria}"

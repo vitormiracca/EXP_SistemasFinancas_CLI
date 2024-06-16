@@ -4,3 +4,8 @@ Funcionalidades do Sistema:
     2- Registro (criar lançamentos, categorias e contas);
     3- Extrato (visualizar extrato geral, por conta e por categoria);
     
+Prioridades:
+
+    - Ajustar métodos de captura de dados (listar dados corretamente (extrair RowDict);
+    - Imputar registros de um mês inteiro para iniciar funcionalidade Resumo Geral;
+    - Validação de dados nos registros;

@@ -4,8 +4,6 @@ from view.resumo_financeiro import Resumo_Financeiro
 from view.extrato import inicio_extrato
 from view.registro import inicio_registro
 
-
-
 def sair():
     print("""
 # Obrigado por utilziar o MyCashFlow APP...

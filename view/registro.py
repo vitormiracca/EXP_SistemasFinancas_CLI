@@ -1,4 +1,7 @@
 from datetime import date
+from controller.categoria_dao import CategoriaController
+from controller.conta_dao import ContaController
+from controller.lancamento_dao import LancamentoController
 from models.categoria import Categoria
 from models.conta import Conta
 from models.lancamento import Lancamento
@@ -138,9 +141,83 @@ def registrar_lancamento():
     # Perguntar a descrição
     descricao = input("\nDescrição: ")
 
-    # Criar o lançamento
-    Lancamento(data_lancamento, tipo_lancamento, conta, categoria, valor, descricao)
-    print("\nLançamento registrado com sucesso!")
+    if tipo_lancamento == 'Transferência Entre Contas':
+        # Perguntar a conta de destino
+        while True:
+            print("\n# Contas Destino Disponíveis:")
+            contas_destino = [c for c in contas if c != conta]
+            listar_opcoes(contas_destino)
+            try:
+                conta_destino_idx = int(input()) - 1
+                if conta_destino_idx not in range(len(contas_destino)):
+                    raise IndexError
+                conta_destino = contas_destino[conta_destino_idx]
+                break
+            except (ValueError, IndexError):
+                print("Opção inválida. Por favor, escolha um número da lista.")
+
+        lancamento_controller = LancamentoController()
+        # Registrar lançamento negativo na conta de origem
+        lancamento_controller.criar_lancamento(
+            data_lancamento=data_lancamento,
+            tipo_lancamento=tipo_lancamento,
+            conta=conta,
+            categoria=categoria,
+            valor=-abs(valor),
+            descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+        )
+
+        # Registrar lançamento positivo na conta de destino
+        lancamento_controller.criar_lancamento(
+            data_lancamento=data_lancamento,
+            tipo_lancamento=tipo_lancamento,
+            conta=conta_destino,
+            categoria=categoria,
+            valor=abs(valor),
+            descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+        )
+
+        # # Registrar lançamento negativo na conta de origem
+        # Lancamento(
+        #     data_lancamento=data_lancamento,
+        #     tipo_lancamento=tipo_lancamento,
+        #     conta=conta,
+        #     categoria=categoria,
+        #     valor=-abs(valor),
+        #     descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+        # )
+
+        # # Registrar lançamento positivo na conta de destino
+        # Lancamento(
+        #     data_lancamento=data_lancamento,
+        #     tipo_lancamento=tipo_lancamento,
+        #     conta=conta_destino,
+        #     categoria=categoria,
+        #     valor=abs(valor),
+        #     descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+        # )
+
+        print("\nTransferência registrada com sucesso!")
+    else:
+        lancamento_controller = LancamentoController()
+        lancamento_controller.criar_lancamento(
+            data_lancamento, 
+            tipo_lancamento, 
+            conta['id'], 
+            categoria['id'], 
+            valor, 
+            descricao
+            )
+        # Lancamento(
+        #     data_lancamento=data_lancamento,
+        #     tipo_lancamento=tipo_lancamento,
+        #     conta=conta,
+        #     categoria=categoria,
+        #     valor=valor,
+        #     descricao=descricao
+        # )
+
+        print("\nLançamento registrado com sucesso!")
 
 def registrar_conta():
     '''
@@ -161,7 +238,10 @@ def registrar_conta():
             break
         except (ValueError, IndexError):
             print("Opção inválida. Por favor, escolha um número da lista.")
-    Conta(nome_conta, tipo_conta)
+    conta_controller = ContaController()
+    conta_controller.criar_conta(nome_conta, tipo_conta, None, None)
+    # ContaController.criar_conta(nome_conta, tipo_conta, dia_fechamento or None, dia_vencimento or None)
+    # Conta(nome_conta, tipo_conta)
     print("\nConta registrada com sucesso!")
 
 def registrar_categoria():
@@ -175,7 +255,9 @@ def registrar_categoria():
     listar_opcoes(tipos_lancamento)
     while True:
         try:
-            tipo_lancamento_idx = int(input()) - 1
+            tipo_lancamento_idx = int(input()) -1
+            # if tipo_lancamento_idx == 0:
+            #     break
             if tipo_lancamento_idx not in range(len(tipos_lancamento)):
                 raise IndexError
             tipo_lancamento = tipos_lancamento[tipo_lancamento_idx]
@@ -183,7 +265,9 @@ def registrar_categoria():
         except (ValueError, IndexError):
             print("Opção inválida. Por favor, escolha um número da lista.")
     nome_categoria = input("# Nome da Categoria: ")
-    Categoria(tipo_lancamento, nome_categoria)
+    categoria_controller = CategoriaController()
+    categoria_controller.criar_categoria(tipo_lancamento, nome_categoria)
+    # Categoria(tipo_lancamento, nome_categoria)
     print("\nCategoria registrada com sucesso!")
 
 def inicio_registro():

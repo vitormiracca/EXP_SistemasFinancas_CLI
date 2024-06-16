@@ -25,12 +25,11 @@ for tipo, cats in categorias.items():
         Categoria(tipo, cat)
 
 def main():
-
     funcoes = vw.funcoes()
-
     while True:
         vw.display_home()
         vw.display_escolha_funcionalidade()
+        
         try:
             escolha_user = int(input())
             if escolha_user in funcoes:
