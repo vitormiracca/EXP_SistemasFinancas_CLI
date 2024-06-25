@@ -64,12 +64,19 @@ Por favor, insira as informações da Categoria...
             """
     print(mensagem)
 
-def listar_opcoes(opcoes):
+def listar_opcoes(opcoes, exclude:list = None):
     '''
     Função para enumerar uma lista de opções e printá-las na tela, inciando com 1.
     '''
-    for idx, opcao in enumerate(opcoes, 1):
-        print(f"{idx} - {opcao}")
+    if (exclude):
+        for idx, opcao in enumerate(opcoes, 1):
+            if (idx in exclude):
+                pass
+            else:
+                print(f"{idx} - {opcao}")
+    else:
+        for idx, opcao in enumerate(opcoes, 1):
+            print(f"{idx} - {opcao}")
 
 def registrar_lancamento():
     '''
@@ -145,8 +152,8 @@ def registrar_lancamento():
         # Perguntar a conta de destino
         while True:
             print("\n# Contas Destino Disponíveis:")
-            contas_destino = [c for c in contas if c != conta]
-            listar_opcoes(contas_destino)
+            contas_destino = Conta.listar_contas()
+            listar_opcoes([conta['nome_conta'] for conta in contas_destino], exclude=[conta_idx+1])
             try:
                 conta_destino_idx = int(input()) - 1
                 if conta_destino_idx not in range(len(contas_destino)):
@@ -164,17 +171,17 @@ def registrar_lancamento():
             conta_id=conta['id'],
             categoria_id=categoria['id'],
             valor=-abs(valor),
-            descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+            descricao=f"Transferência enviada de {conta['nome_conta']} para {conta_destino['nome_conta']}: {descricao}"
         )
 
         # Registrar lançamento positivo na conta de destino
         lancamento_controller.criar_lancamento(
             data_lancamento=data_lancamento,
             tipo_lancamento=tipo_lancamento,
-            conta_id=conta['id'],
+            conta_id=conta_destino['id'],
             categoria_id=categoria['id'],
             valor=abs(valor),
-            descricao=f"Transferência enviada de {conta} para {conta_destino }: {descricao}"
+            descricao=f"Transferência enviada de {conta['nome_conta']} para {conta_destino['nome_conta']}: {descricao}"
         )
 
         # # Registrar lançamento negativo na conta de origem
@@ -235,11 +242,18 @@ def registrar_conta():
             if tipo_conta_idx not in range(len(tipos_conta)):
                 raise IndexError
             tipo_conta = tipos_conta[tipo_conta_idx]
+            if (tipo_conta == 'Conta de Crédito'):
+                dia_vencimento = int(input('\n# Dia Vencimento da Fatura: '))
+                dia_fechamento = int(input('\n# Dia Fechamento da Fatura: '))
+            else:
+                dia_vencimento = None
+                dia_fechamento = None
             break
         except (ValueError, IndexError):
             print("Opção inválida. Por favor, escolha um número da lista.")
+
     conta_controller = ContaController()
-    conta_controller.criar_conta(nome_conta, tipo_conta, None, None)
+    conta_controller.criar_conta(nome_conta=nome_conta, tipo_conta=tipo_conta, dia_vencimento=dia_vencimento, dia_fechamento=dia_fechamento)
     # ContaController.criar_conta(nome_conta, tipo_conta, dia_fechamento or None, dia_vencimento or None)
     # Conta(nome_conta, tipo_conta)
     print("\nConta registrada com sucesso!")

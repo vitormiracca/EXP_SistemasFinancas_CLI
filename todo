@@ -6,6 +6,7 @@ Funcionalidades do Sistema:
     
 Prioridades:
 
-    - Ajustar métodos de captura de dados (listar dados corretamente (extrair RowDict);
     - Imputar registros de um mês inteiro para iniciar funcionalidade Resumo Geral;
-    - Validação de dados nos registros;
+
+    - Validação de dados nos registros -> Data Quality;
+

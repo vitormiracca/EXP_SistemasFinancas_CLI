@@ -5,7 +5,7 @@ class Conta:
 
     _contas = {} # {'Conta Corrente':[object1, object2]}
 
-    def __init__(self, nome_conta:str, tipo_conta:str, dia_fechamento=None, dia_vencimento=None):
+    def __init__(self, nome_conta:str, tipo_conta:str, dia_fechamento:int = None, dia_vencimento:int = None):
         self._nome_conta = nome_conta
         self._tipo_conta = tipo_conta
         self._dia_fechamentoo = dia_fechamento
